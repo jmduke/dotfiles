@@ -1,0 +1,96 @@
+# =============================================================================
+# Environment Variables
+# =============================================================================
+
+export HOMEBREW_PREFIX=/opt/homebrew
+export DOTFILES_DIR="$HOME/dotfiles"
+
+# =============================================================================
+# PATH Configuration
+# =============================================================================
+
+# Homebrew (must come early so brew-installed tools are available)
+if [ -d "/opt/homebrew" ]; then
+  export PATH="/opt/homebrew/bin:/opt/homebrew/sbin:$PATH"
+fi
+
+# User binaries
+export PATH="$HOME/bin:$PATH"
+
+# Database clients
+[ -d "/opt/homebrew/opt/mysql-client@8.4/bin" ] && export PATH="/opt/homebrew/opt/mysql-client@8.4/bin:$PATH"
+[ -d "/opt/homebrew/Cellar/postgresql@17/17.5/bin" ] && export PATH="/opt/homebrew/Cellar/postgresql@17/17.5/bin:$PATH"
+
+# Bun
+[ -d "$HOME/.bun/bin" ] && export PATH="$HOME/.bun/bin:$PATH"
+
+# Atuin (needs to be in PATH before init)
+[ -f "$HOME/.atuin/bin/env" ] && . "$HOME/.atuin/bin/env"
+
+# =============================================================================
+# Tool Initialization
+# =============================================================================
+
+# Starship prompt
+command -v starship >/dev/null 2>&1 && eval "$(starship init zsh)"
+
+# Atuin shell history
+command -v atuin >/dev/null 2>&1 && eval "$(atuin init zsh)"
+
+# rbenv (Ruby version manager)
+command -v rbenv >/dev/null 2>&1 && eval "$(rbenv init -)"
+
+# mise (polyglot version manager)
+[ -f "$HOME/.local/bin/mise" ] && eval "$(~/.local/bin/mise activate zsh)"
+
+# zoxide (smart cd)
+command -v zoxide >/dev/null 2>&1 && eval "$(zoxide init zsh)"
+
+# =============================================================================
+# Aliases
+# =============================================================================
+
+# eza as ls replacement
+command -v eza >/dev/null 2>&1 && alias ls="eza -a --icons=always --hyperlink -1"
+
+# Workflow scripts
+alias w="work-on-branch.sh"
+alias wg="work-on-worktree.sh"
+alias s="stash.sh"
+alias wip="commit-changes.sh"
+alias wipc="commit-changes-cursor.sh"
+alias c="launch-cursor.sh"
+alias n="$HOME/buttondown/monorepo/scripts/new-branch.sh"
+
+# =============================================================================
+# Functions
+# =============================================================================
+
+# Update dotfiles from repo
+update-dotfiles() {
+  if [ -d "$DOTFILES_DIR" ]; then
+    (cd "$DOTFILES_DIR" && git pull && ./install)
+  else
+    echo "Error: dotfiles directory not found at $DOTFILES_DIR"
+    return 1
+  fi
+}
+
+# =============================================================================
+# Local Overrides
+# =============================================================================
+
+# Source local .zshrc files when changing directories
+_source_local_zshrc() {
+  local local_zshrc="./.zshrc"
+  if [[ -f "$local_zshrc" && "${PWD}" != "$HOME" ]]; then
+    echo "Sourcing local .zshrc..."
+    source "$local_zshrc"
+  fi
+}
+
+chpwd() { _source_local_zshrc }
+_source_local_zshrc
+
+# Source machine-specific config if it exists
+[ -f "$HOME/.zshrc.local" ] && source "$HOME/.zshrc.local"
