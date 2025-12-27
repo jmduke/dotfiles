@@ -4,6 +4,7 @@
 
 export HOMEBREW_PREFIX=/opt/homebrew
 export DOTFILES_DIR="$HOME/dotfiles"
+export HOMEBREW_NO_ENV_HINTS=1
 
 # =============================================================================
 # PATH Configuration
@@ -52,6 +53,9 @@ command -v zoxide >/dev/null 2>&1 && eval "$(zoxide init zsh)"
 
 # eza as ls replacement
 command -v eza >/dev/null 2>&1 && alias ls="eza -a --icons=always --hyperlink -1"
+
+# bat as cat replacement
+command -v bat >/dev/null 2>&1 && alias cat="bat"
 
 # Workflow scripts
 alias w="work-on-branch.sh"
