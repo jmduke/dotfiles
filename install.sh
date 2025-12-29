@@ -13,4 +13,4 @@ ln -sf "$DOTFILES/config/ipython_config.py" ~/.ipython/profile_default/ipython_c
 ln -sf "$DOTFILES/scripts/commit-changes.sh" ~/bin/commit-changes.sh
 ln -sf "$DOTFILES/scripts/launch-cursor.sh" ~/bin/launch-cursor.sh
 
-brew install atuin bat difftastic eza fd gh mdcat tree zoxide yt-dlp
+brew install atuin bat difftastic eza fd gh mdcat pgcli tree zoxide yt-dlp
