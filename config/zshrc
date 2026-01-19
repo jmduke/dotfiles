@@ -98,3 +98,9 @@ _source_local_zshrc
 
 # Source machine-specific config if it exists
 [ -f "$HOME/.zshrc.local" ] && source "$HOME/.zshrc.local"
+
+# bun completions
+[ -s "/Users/jmduke/.bun/_bun" ] && source "/Users/jmduke/.bun/_bun"
+
+# For scraping.
+ulimit -n 10240
