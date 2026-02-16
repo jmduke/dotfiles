@@ -104,3 +104,5 @@ _source_local_zshrc
 
 # For scraping.
 ulimit -n 10240
+
+export MISE_EXPERIMENTAL=true
