@@ -57,6 +57,9 @@ command -v eza >/dev/null 2>&1 && alias ls="eza -a --icons=always --hyperlink -1
 # bat as cat replacement
 command -v bat >/dev/null 2>&1 && alias cat="bat"
 
+# Zed editor
+alias zed="open -a 'Zed'"
+
 # Workflow scripts
 alias w="work-on-branch.sh"
 alias wg="work-on-worktree.sh"
