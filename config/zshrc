@@ -108,4 +108,8 @@ _source_local_zshrc
 # For scraping.
 ulimit -n 10240
 
-export MISE_EXPERIMENTAL=true
+export MISE_EXPERIMENTAL=1
+export PATH="$HOME/.local/bin:$PATH"
+export PATH="$HOME/.local/share/mise/shims:$PATH"
+alias vim="nvim"
+eval "$(atuin init zsh)"
