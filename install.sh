@@ -6,6 +6,9 @@ DOTFILES="$(cd "$(dirname "$0")" && pwd)"
 mkdir -p ~/downloads ~/.config/ghostty ~/.local/bin ~/.ipython/profile_default ~/bin
 
 ln -sf "$DOTFILES/config/zshrc" ~/.zshrc
+ln -sf "$DOTFILES/config/zshenv" ~/.zshenv
+ln -sf "$DOTFILES/config/zprofile" ~/.zprofile
+ln -sf "$DOTFILES/config/psqlrc" ~/.psqlrc
 ln -sf "$DOTFILES/config/starship.toml" ~/.config/starship.toml
 ln -sf "$DOTFILES/config/gitconfig.ini" ~/.gitconfig
 ln -sf "$DOTFILES/config/ghostty.config" ~/.config/ghostty/config
