@@ -67,7 +67,7 @@ alias s="stash.sh"
 alias wip="commit-changes.sh"
 alias wipc="commit-changes-cursor.sh"
 alias c="launch-cursor.sh"
-alias n="$HOME/buttondown/monorepo/scripts/new-branch.sh"
+alias n="$DOTFILES_DIR/scripts/new-branch.sh"
 
 # =============================================================================
 # Functions
