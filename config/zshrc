@@ -96,7 +96,10 @@ _source_local_zshrc() {
   fi
 }
 
-chpwd() { _source_local_zshrc }
+# Guard the hook: if the helper isn't defined (e.g. session restore or a
+# non-interactive shell that didn't fully source this file), do nothing
+# instead of erroring with "command not found".
+chpwd() { (( $+functions[_source_local_zshrc] )) && _source_local_zshrc }
 _source_local_zshrc
 
 # Source machine-specific config if it exists
