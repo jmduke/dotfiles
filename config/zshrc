@@ -8,7 +8,7 @@ export HOMEBREW_NO_ENV_HINTS=1
 
 # =============================================================================
 # PATH Configuration
-# =============G================================================================
+# =============================================================================
 
 # Homebrew (must come early so brew-installed tools are available)
 if [ -d "/opt/homebrew" ]; then
@@ -66,7 +66,6 @@ alias wg="work-on-worktree.sh"
 alias s="stash.sh"
 alias wip="commit-changes.sh"
 alias wipc="commit-changes-cursor.sh"
-alias c="launch-cursor.sh"
 alias n="$DOTFILES_DIR/scripts/new-branch.sh"
 
 # =============================================================================
@@ -76,7 +75,7 @@ alias n="$DOTFILES_DIR/scripts/new-branch.sh"
 # Update dotfiles from repo
 update-dotfiles() {
   if [ -d "$DOTFILES_DIR" ]; then
-    (cd "$DOTFILES_DIR" && git pull && ./install)
+    (cd "$DOTFILES_DIR" && git pull && ./install.sh)
   else
     echo "Error: dotfiles directory not found at $DOTFILES_DIR"
     return 1
@@ -115,5 +114,4 @@ export MISE_EXPERIMENTAL=1
 export PATH="$HOME/.local/bin:$PATH"
 export PATH="$HOME/.local/share/mise/shims:$PATH"
 alias vim="nvim"
-eval "$(atuin init zsh)"
 alias pyt="$DOTFILES_DIR/scripts/pythia.sh"

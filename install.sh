@@ -13,7 +13,10 @@ ln -sf "$DOTFILES/config/starship.toml" ~/.config/starship.toml
 ln -sf "$DOTFILES/config/gitconfig.ini" ~/.gitconfig
 ln -sf "$DOTFILES/config/ghostty.config" ~/.config/ghostty/config
 ln -sf "$DOTFILES/config/ipython_config.py" ~/.ipython/profile_default/ipython_config.py
-ln -sf "$DOTFILES/scripts/commit-changes.sh" ~/bin/commit-changes.sh
+# Symlink workflow scripts into ~/bin so their bare-name aliases resolve.
+for script in commit-changes.sh stash.sh work-on-branch.sh work-on-worktree.sh; do
+    ln -sf "$DOTFILES/scripts/$script" ~/bin/"$script"
+done
 
 # Bootstrap Homebrew on a fresh machine and wire it into the login shell.
 if ! command -v brew >/dev/null 2>&1; then
@@ -24,7 +27,7 @@ if ! command -v brew >/dev/null 2>&1; then
 fi
 
 # CLI tools and GUI apps installed via Homebrew.
-brew install atuin bat difftastic eza fd gh llm mdcat pgcli tree vim zoxide yt-dlp
+brew install atuin bat difftastic eza fd gh llm mdcat neovim pgcli starship tree vim zoxide yt-dlp
 brew install --cask zed conductor aqua
 
 # Start atuin's sync daemon so shell history is captured across sessions.
