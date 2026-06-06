@@ -8,7 +8,7 @@ export HOMEBREW_NO_ENV_HINTS=1
 
 # =============================================================================
 # PATH Configuration
-# =============================================================================
+# =============G================================================================
 
 # Homebrew (must come early so brew-installed tools are available)
 if [ -d "/opt/homebrew" ]; then
@@ -116,3 +116,4 @@ export PATH="$HOME/.local/bin:$PATH"
 export PATH="$HOME/.local/share/mise/shims:$PATH"
 alias vim="nvim"
 eval "$(atuin init zsh)"
+alias pyt="$DOTFILES_DIR/scripts/pythia.sh"
