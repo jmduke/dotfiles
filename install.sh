@@ -45,6 +45,9 @@ brew bundle --file="$DOTFILES/Brewfile"
 # Install gh extensions (gh dash = cross-repo PR/issue dashboard).
 command -v gh >/dev/null 2>&1 && gh extension install dlvhdr/gh-dash 2>/dev/null || true
 
+# Normalize ghq repo folders so each is named after its actual repo.
+"$DOTFILES/scripts/ghq-normalize.sh"
+
 # Install mise (runtime/version manager) via its official installer.
 if ! command -v mise >/dev/null 2>&1; then
     curl https://mise.run | sh
