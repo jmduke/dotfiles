@@ -6,7 +6,7 @@ export HOMEBREW_PREFIX=/opt/homebrew
 # Derive the dotfiles repo from the symlinked ~/.zshrc so moving the repo can't
 # break the paths below. Falls back to the known location if readlink yields nothing.
 DOTFILES_DIR="$(dirname "$(dirname "$(readlink ~/.zshrc)")")"
-[ -d "$DOTFILES_DIR" ] || DOTFILES_DIR="$HOME/repositories/jmduke/dotfiles"
+[ -d "$DOTFILES_DIR" ] || DOTFILES_DIR="$HOME/repositories/github.com/jmduke/dotfiles"
 export DOTFILES_DIR
 export HOMEBREW_NO_ENV_HINTS=1
 
