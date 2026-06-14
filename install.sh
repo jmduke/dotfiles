@@ -13,6 +13,9 @@ link_dotfiles() {
     # Symlink config files and scripts from this repo into their expected locations
     # so edits here take effect immediately without copying.
     ln -sf "$DOTFILES/config/zshrc" ~/.zshrc
+    ln -sf "$DOTFILES/config/zshenv" ~/.zshenv
+    ln -sf "$DOTFILES/config/zprofile" ~/.zprofile
+    ln -sf "$DOTFILES/config/psqlrc" ~/.psqlrc
     ln -sf "$DOTFILES/config/starship.toml" ~/.config/starship.toml
     ln -sf "$DOTFILES/config/gitconfig.ini" ~/.gitconfig
     ln -sf "$DOTFILES/config/ghostty.config" ~/.config/ghostty/config
