@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+  <key>Label</key>
+  <string>com.local.disableawdl</string>
+  <!-- AWDL (AirDrop/Handoff/Sidecar radio) periodically hops the Wi-Fi card
+       off-channel, injecting 100ms+ latency spikes. macOS re-enables it on
+       reboot and whenever a Continuity feature wakes, so re-disable on a timer. -->
+  <key>ProgramArguments</key>
+  <array>
+    <string>/sbin/ifconfig</string>
+    <string>awdl0</string>
+    <string>down</string>
+  </array>
+  <key>RunAtLoad</key>
+  <true/>
+  <key>StartInterval</key>
+  <integer>10</integer>
+  <key>StandardOutPath</key>
+  <string>/dev/null</string>
+  <key>StandardErrorPath</key>
+  <string>/dev/null</string>
+</dict>
+</plist>

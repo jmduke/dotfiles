@@ -48,6 +48,9 @@ command -v gh >/dev/null 2>&1 && gh extension install dlvhdr/gh-dash 2>/dev/null
 # Normalize ghq repo folders so each is named after its actual repo.
 "$DOTFILES/scripts/ghq-normalize.sh"
 
+# Keep AWDL (AirDrop/Handoff radio) disabled — it causes Wi-Fi latency spikes.
+"$DOTFILES/scripts/disable-awdl.sh"
+
 # Install mise (runtime/version manager) via its official installer.
 if ! command -v mise >/dev/null 2>&1; then
     curl https://mise.run | sh
