@@ -29,6 +29,8 @@ link_dotfiles() {
     ln -sf "$DOTFILES/scripts/taxing-watch" ~/.local/bin/taxing-watch
     # Background CPU-hog watcher (launchd agent, checks every 60s).
     ln -sf "$DOTFILES/LaunchAgents/com.jmduke.taxing-watch.plist" ~/Library/LaunchAgents/com.jmduke.taxing-watch.plist
+    # Activate it now (idempotent: harmless no-op if already loaded).
+    launchctl load -w ~/Library/LaunchAgents/com.jmduke.taxing-watch.plist 2>/dev/null || true
 }
 
 link_dotfiles
