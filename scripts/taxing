@@ -1,0 +1,35 @@
+#!/bin/zsh
+# taxing — show what's currently taxing the machine and flag anything abnormal.
+# Usage: taxing [N]   (N = number of top processes to show, default 8)
+
+n=${1:-8}
+cores=$(sysctl -n hw.logicalcpu)
+
+# Load average (1m) vs core count.
+read -r load1 _ < <(sysctl -n vm.loadavg | tr -d '{}' | awk '{print $1, $2, $3}')
+idle=$(top -l 1 -n 0 | awk -F'[:,]' '/CPU usage/{gsub(/[^0-9.]/,"",$NF); print $NF}')
+
+# Color helpers (only if stdout is a tty).
+if [ -t 1 ]; then red=$'\e[31m'; yellow=$'\e[33m'; green=$'\e[32m'; bold=$'\e[1m'; rst=$'\e[0m'
+else red=; yellow=; green=; bold=; rst=; fi
+
+ratio=$(awk -v l="$load1" -v c="$cores" 'BEGIN{printf "%.1f", l/c}')
+if   (( $(awk -v r="$ratio" 'BEGIN{print (r>=1.0)}') )); then lc=$red
+elif (( $(awk -v r="$ratio" 'BEGIN{print (r>=0.7)}') )); then lc=$yellow
+else lc=$green; fi
+
+print -- "${bold}Load:${rst} ${lc}${load1}${rst} (1m) over ${cores} cores = ${lc}${ratio}× per-core${rst}   ${bold}idle:${rst} ${idle}%"
+print --
+print -- "${bold}PID    %CPU  %MEM  PROCESS${rst}"
+
+# Top processes by CPU. Flag any single proc over ~90% (≈1 full core pegged).
+ps -Ao pid,pcpu,pmem,comm -r | sed -n "2,$((n+1))p" | while read -r pid cpu mem comm; do
+  flag=
+  if (( $(awk -v c="$cpu" 'BEGIN{print (c>=150)}') )); then flag="${red}  ⟵ RUNAWAY${rst}"; comm_c=$red
+  elif (( $(awk -v c="$cpu" 'BEGIN{print (c>=90)}') )); then flag="${yellow}  ⟵ heavy${rst}"; comm_c=$yellow
+  else comm_c=; fi
+  printf "%-6s %5s %5s  %s%s%s%s\n" "$pid" "$cpu" "$mem" "$comm_c" "$comm" "$rst" "$flag"
+done
+
+print --
+print -- "Tip: kill a runaway with  ${bold}kill <PID>${rst}   ·   investigate cwd with  ${bold}lsof -p <PID> -a -d cwd${rst}"

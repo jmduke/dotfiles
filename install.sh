@@ -8,7 +8,7 @@ DOTFILES="$(cd "$(dirname "$0")" && pwd)"
 # ~/.gitconfig, ~/bin/* etc. after moving this repo — without the slow brew section.
 link_dotfiles() {
     # Create the directories that the symlinks and tools below expect to exist.
-    mkdir -p ~/downloads ~/.config/ghostty ~/.local/bin ~/.ipython/profile_default ~/bin
+    mkdir -p ~/downloads ~/.config/ghostty ~/.local/bin ~/.ipython/profile_default ~/bin ~/Library/LaunchAgents
 
     # Symlink config files and scripts from this repo into their expected locations
     # so edits here take effect immediately without copying.
@@ -24,6 +24,11 @@ link_dotfiles() {
     for script in commit-changes.sh stash.sh work-on-branch.sh work-on-worktree.sh; do
         ln -sf "$DOTFILES/scripts/$script" ~/bin/"$script"
     done
+    # Symlink machine-health commands onto PATH (taxing = on-demand, taxing-watch = launchd worker).
+    ln -sf "$DOTFILES/scripts/taxing" ~/.local/bin/taxing
+    ln -sf "$DOTFILES/scripts/taxing-watch" ~/.local/bin/taxing-watch
+    # Background CPU-hog watcher (launchd agent, checks every 60s).
+    ln -sf "$DOTFILES/LaunchAgents/com.jmduke.taxing-watch.plist" ~/Library/LaunchAgents/com.jmduke.taxing-watch.plist
 }
 
 link_dotfiles

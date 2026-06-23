@@ -1,0 +1,38 @@
+#!/bin/zsh
+# taxing-watch — single check pass; alerts (macOS notification) on a sustained CPU hog.
+# Designed to be run on an interval by launchd. Logs to ~/Library/Logs/taxing-watch.log
+#
+# Sustained = above THRESHOLD in two samples ~SAMPLE_GAP seconds apart.
+# Rate-limited to one alert per process per COOLDOWN seconds (state in /tmp).
+
+THRESHOLD=${TAXING_THRESHOLD:-200}   # %CPU; 200 = ~2 full cores pegged
+SAMPLE_GAP=${TAXING_GAP:-6}          # seconds between the two samples
+COOLDOWN=${TAXING_COOLDOWN:-600}     # seconds before re-alerting on the same PID
+STATE=/tmp/taxing-watch.state        # PID:lastalert-epoch lines
+
+now=$(date +%s)
+
+# Sample 1: candidate PIDs over threshold.
+cand=$(ps -Ao pid,pcpu,comm -r | awk -v t="$THRESHOLD" 'NR>1 && $2+0 >= t {print $1}')
+[ -z "$cand" ] && exit 0
+
+sleep "$SAMPLE_GAP"
+
+# Sample 2: keep only PIDs still over threshold.
+ps -Ao pid,pcpu,comm -r | awk -v t="$THRESHOLD" 'NR>1 && $2+0 >= t {print}' | while read -r pid cpu comm; do
+  echo "$cand" | grep -qx "$pid" || continue   # must have been hot in sample 1 too
+
+  # Cooldown check.
+  last=$(grep "^$pid:" "$STATE" 2>/dev/null | tail -1 | cut -d: -f2)
+  if [ -n "$last" ] && [ $((now - last)) -lt "$COOLDOWN" ]; then continue; fi
+
+  name=$(basename "$comm")
+  osascript -e "display notification \"${name} — ${cpu}% CPU (PID ${pid})\" with title \"⚠️ Process taxing your laptop\" sound name \"Submarine\""
+  echo "$(date '+%Y-%m-%d %H:%M:%S')  ALERT  pid=$pid cpu=$cpu  $comm" >> ~/Library/Logs/taxing-watch.log
+
+  # Record alert time (rewrite state without this pid's old line).
+  grep -v "^$pid:" "$STATE" 2>/dev/null > "$STATE.tmp"; mv "$STATE.tmp" "$STATE"
+  echo "$pid:$now" >> "$STATE"
+done
+
+exit 0
